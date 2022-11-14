@@ -9,9 +9,7 @@
 #include<sys/resource.h>
 #include <benchmark.h>
 
-#define SIZE_OF_STAT 100
-#define BOUND_OF_LOOP 10
-#define UINT64_MAX (18446744073709551615ULL)
+#define ITERS 1000
 
 int main()
 {
@@ -26,20 +24,7 @@ int main()
 	//ensure that this process gets the highest priority
 	setpriority(PRIO_PROCESS, getpid(), -20);
 
-	asm volatile("cpuid\n\t"
-                "rdtsc\n\t"
-                "mov %%edx, %0\n\t"
-                "mov %%eax, %1\n\t"
-                : "=r" (cycles_high), "=r" (cycles_low)
-                :: "%rax", "%rbx", "%rcx", "%rdx"); 
-			
-	asm   volatile("RDTSCP\n\t"          
-			"mov %%edx, %0\n\t"          
-			"mov %%eax, %1\n\t"          
-			"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: 
-			"%rax", "%rbx", "%rcx", "%rdx"); 
-
-	for   (int i = 0; i < BOUND_OF_LOOP * SIZE_OF_STAT ; i++) 
+	for   (int i = 0; i < ITERS ; i++) 
 	{        
 		start_benchmark();			
 		//** Code to be Benchmarked

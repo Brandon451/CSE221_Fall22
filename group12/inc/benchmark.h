@@ -26,10 +26,10 @@ inline void end_benchmark(){
 
 inline double report_cycles(int iterations){
         start = ( ((unsigned long long int)start_cycles_high << 32)   | start_cycles_low ); 
-		end   = ( ((unsigned long long int)end_cycles_high << 32) | end_cycles_low );     
-        double cycles = (double)((end-start)/iterations);
-		printf("%.3f\n",  cycles - benchmark_cycle_overhead);
-        return (cycles - benchmark_cycle_overhead);
+	end   = ( ((unsigned long long int)end_cycles_high << 32) | end_cycles_low );     
+        double num_cycles = (double)((end-start)/iterations);
+		printf("%.3f\n",  num_cycles - benchmark_cycle_overhead);
+        return (num_cycles - benchmark_cycle_overhead);
 }
 
 inline double report_difference(double c1, double c2){

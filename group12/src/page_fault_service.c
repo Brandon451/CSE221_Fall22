@@ -64,7 +64,7 @@ int main()
 	overhead(0);
 	for(int i = 0; i < SIZE_OF_STAT * BOUND_OF_LOOP; i++) 
 	{  
-		system("sync; echo 1 > /proc/sys/vm/drop_caches");
+		system("sync; echo 1 > sudo /proc/sys/vm/drop_caches");
 		// mmap file     
 		index = index + (100+(rand()%100))*getpagesize();
 		fil = mmap(NULL, SIZE_OF_FILE, PROT_READ, MAP_SHARED, fd,0); 
