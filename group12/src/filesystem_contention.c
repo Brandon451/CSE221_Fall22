@@ -42,7 +42,7 @@ void benchmark_contention(int num_processes, int n_blocks){
     }
 
     // clear file cache
-    system("sync; echo 1 > /proc/sys/vm/drop_caches");
+    system("sync; echo 1 > sudo /proc/sys/vm/drop_caches");
 
     // create processes
     for(i=0; i< num_processes-1; i++){

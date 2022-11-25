@@ -92,7 +92,7 @@ int main(int argc, char const *argv[]) {
 
         fd = open(files[i], O_RDONLY);
         // disable read ahead
-        fcntl(fd, F_RDAHEAD, 0);
+        //fcntl(fd, F_RDAHEAD, 0);
 
         // first read, potentially loading into file cache
         lseek(fd, 0, SEEK_SET);
@@ -100,7 +100,7 @@ int main(int argc, char const *argv[]) {
 
         // second read. if file size is smaller than file cache, read time will be low, else high
         lseek(fd, 0, SEEK_SET);
-        double time_taken = reader(fd, buffer, file_sizes[i]);
+        time_taken = reader(fd, buffer, file_sizes[i]);
 
         printf("%.2lf, %.2lf, %.2lf\n", ((double)file_sizes[i]/MB), time_taken, ((double)file_sizes[i]/MB)/time_taken);
     }

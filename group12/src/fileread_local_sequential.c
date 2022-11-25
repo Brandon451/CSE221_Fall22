@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) // args: bs, count
 			"%rax", "%rbx", "%rcx", "%rdx"); 
 
 	// Clear file buffer cache	
-	system("sync; echo 1 > /proc/sys/vm/drop_caches");
+	system("sync; echo 1 > sudo /proc/sys/vm/drop_caches");
 	// Create aligned buffer for file contents
 	void *buffer; 
 	int aligned = posix_memalign(&buffer, 4096, 4096);
