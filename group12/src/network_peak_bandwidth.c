@@ -11,7 +11,7 @@
 #include <float.h>
 
 #define LOCAL "127.0.0.1"
-#define SERVERADDR "132.239.17.67"
+#define SERVERADDR "127.0.0.1"
 #define SERVERPORT 8080
 #define KB 1024
 #define MB (1024 * KB)
