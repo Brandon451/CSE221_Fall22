@@ -2,41 +2,33 @@
 	#define _GNU_SOURCE 
 #endif
 #include<stdio.h>
-#include<sched.h>
 #include<stdlib.h>
+#include<sched.h>
 #include<unistd.h>
 #include<sys/time.h>
 #include<sys/resource.h>
 #include<benchmark.h>
 #include<fcntl.h>
-#include<stdlib.h>
 #include<errno.h>
 #include<string.h>
 #include<math.h>
 
-#define SIZE_OF_STAT 10 
-#define BOUND_OF_LOOP 10
-#define SIZE_OF_FILE 1073741824
-#define UINT64_MAX (18446744073709551615ULL)
 
 int main(int argc, char* argv[]) // args: bs, count 
 {
 	unsigned int cycles_low, cycles_high, cycles_low1, cycles_high1, index;
-	unsigned long long int start, end;
 
 	if (argc < 2){
-		printf("File sizes not supplied.\n");
+		printf("File size not entered. Please rerun with correct file size.\n");
 	}
 
-    // File Stuff
-	// Random File Create: dd if=/dev/urandom of=512_mb.txt bs=64M count=16 iflag=fullblock
     char file_create[300];
     char *file_name = "fileread_local.txt";
-	int size = atoi(argv[1]) * pow(1024,atoi(argv[2]));
-	int count = 1;
+    int size = atoi(argv[1]) * pow(1024,atoi(argv[2])); //Size of file
+    int count = 1;
 
-    sprintf(file_create, "mkdir ./files; dd if=/dev/urandom of=%s bs=%d count=%d iflag=fullblock ; mv %s ./files/%s", file_name, size, count, file_name, file_name);
-	system(file_create);
+    sprintf(file_create, "dd if=/dev/urandom of=%s bs=%d count=%d iflag=fullblock ; mv %s ./files/%s", file_name, size, count, file_name, file_name);
+    system(file_create);
 
     char filepath[500];
     sprintf (filepath, "./files/%s", file_name);
@@ -44,7 +36,6 @@ int main(int argc, char* argv[]) // args: bs, count
 	if (fd == -1){
 		printf("Error with open: %s\n", strerror(errno));
 	}
-    // End File Stuff
 
 	cpu_set_t cpu_mask;
 	CPU_ZERO(&cpu_mask);
@@ -78,20 +69,18 @@ int main(int argc, char* argv[]) // args: bs, count
 	}
 	
 	size_t buf_size = 4096; //sizeof(buffer);
-	int nbytes;
+	int num_bytes;
 
 	start_benchmark();
-	//** Code to be Benchmarked
-	for(int i = 0; i < (size / 4096) ; i++) 
+	for(int i = 0; i < (size/4096) ; i++) 
 	{  		
-        nbytes = read(fd, buffer, buf_size);				
+        num_bytes = read(fd, buffer, buf_size);				
 	}
-	//** Code End
 	end_benchmark();
-	report_cycles(size / 4096);
+	report_cycles(size/4096);
 	
-	if (nbytes == -1){
-		printf("nbytes:%d, Error: %s\n",nbytes, strerror(errno));
+	if (num_bytes == -1){
+		printf("num_bytes:%d, Error: %s\n",num_bytes, strerror(errno));
 	}
 
 	close(fd);

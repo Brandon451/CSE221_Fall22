@@ -11,9 +11,7 @@ int main() {
     
     if(fork());
     else return 0;
-    //benchmark
-    //measurement overhead 
-    overhead(0);
+    
     for(int i = 0; i < ITERS; i++) {
         start_benchmark();
         if(fork());     // Process Creation

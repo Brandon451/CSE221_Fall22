@@ -1,10 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <benchmark.h>
 #include <iostream>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
 #include <sched.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -13,6 +14,7 @@
 
 #define RW_PROCESS 0
 #define WR_PROCESS 1
+
 inline void wrProcess(int iterations, int *pipe1_fds, int *pipe2_fds)
 {
     bool inbuf[1];
@@ -20,9 +22,7 @@ inline void wrProcess(int iterations, int *pipe1_fds, int *pipe2_fds)
     for (int i = 0; i < iterations; i++)
     {
         write(pipe1_fds[1], &data, 1);
-        //std::cout << " wr sent " << data << std::endl;
         read(pipe2_fds[0], inbuf, 1);
-        //std::cout << " wr got " << inbuf[0] << std::endl;
     }
     close(pipe1_fds[1]);
 }

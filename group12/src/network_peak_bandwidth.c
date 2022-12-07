@@ -1,9 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <benchmark.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -11,7 +11,7 @@
 #include <float.h>
 
 #define LOCAL "127.0.0.1"
-#define SERVERADDR "127.0.0.1"
+#define SERVERADDR "65.109.105.56"
 #define SERVERPORT 8080
 #define KB 1024
 #define MB (1024 * KB)

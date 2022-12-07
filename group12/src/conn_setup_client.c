@@ -2,53 +2,46 @@
 	#define _GNU_SOURCE 
 #endif
 #include <stdio.h>
-#include <sched.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sched.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <benchmark.h>
 #include <netdb.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
+#include <benchmark.h>
 #include <arpa/inet.h>
 
-#define SIZE_OF_STAT 100
-#define BOUND_OF_LOOP 10
-#define UINT64_MAX (18446744073709551615ULL)
+#define ITERS 1000
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
    
 int main()
 {
-    /* Client sends a 64 byte message to the server, server echoes the message
-    / Time is measured between when the client connects to the server and when it receives the 
-    / echoed message */
-    for (int i = 0; i < BOUND_OF_LOOP * SIZE_OF_STAT ; i++) 
+    for (int i = 0; i < ITERS ; i++) 
     {
         int sockfd, connfd;
         struct sockaddr_in servaddr, cli;
     
-        // socket create and verification
+        // Create Socket
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd == -1) {
             exit(0);
         }
         bzero(&servaddr, sizeof(servaddr));
     
-        // assign IP, PORT
+        // Server Define
         servaddr.sin_family = AF_INET;
         servaddr.sin_addr.s_addr = inet_addr("65.109.105.56");
         servaddr.sin_port = htons(PORT);
 
-        //* Code to be benchmarked
+        //Code to be benchmarked
         start_benchmark();
         // connect the client socket to server socket
-        int conn = connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
+        int connection = connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
         end_benchmark();
-        //* Code End
 
         // close the socket
         close(sockfd);

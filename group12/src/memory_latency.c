@@ -1,22 +1,15 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sched.h>
 #include <sys/resource.h>
 #include <unistd.h>
 #include "benchmark.h"
 
-void printbuf(int* buf, int size){
-    for(int i = 0; i< size; i++){
-        printf("%d ", buf[i]);
-    }
-    printf("\n");
-}
-
 int* random_alloc(int size, int stride){
     int* buf = (int*)calloc(size, sizeof(int));
     int val, i, allocs;
     int index;
-    srand(420);
+    srand(500);
     int flip = 1;
     val = (stride*(rand() % size))%(size/2);
     val = (flip*(size/2)) + val;
@@ -39,25 +32,15 @@ int* random_alloc(int size, int stride){
     return buf;
 }
 
-int* alloc(int size, int stride){
-    int* buf = (int*)calloc(size, sizeof(int));
-    int i;
-    for(i=0; i<size; i++){
-        buf[i] = (stride*(i+1))%size;
-    }
-    return buf;
-}
 
 volatile __attribute__ ((noinline)) int benchmark_latency(int size, int stride, int iterations){
 
     int val, i, allocs;
     int index;
     int* buf = random_alloc(size, stride);
-    //printbuf(buf, size);
     i = 0;
     index = 0;
     int acc = 0;
-    overhead(0);
     start_benchmark();
     while(i<iterations){
         index = buf[index];
@@ -85,13 +68,11 @@ int main(int argc, char** argv){
             case 'i':
                 iterations = atoi(optarg);
                 break;
-            case ':':
+            case '?':
                 size = 128;
                 stride = 4;
                 iterations = 10;
-                break;
-            case '?':
-                printf("Unsupported arg, going with default \n");
+                printf("Arguments not supplied correctly, going with default \n");
                 break;
         }
     }

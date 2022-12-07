@@ -2,8 +2,8 @@
 	#define _GNU_SOURCE 
 #endif
 #include <stdio.h>
-#include <sched.h>
 #include <stdlib.h>
+#include <sched.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -15,15 +15,13 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#define SIZE_OF_STAT 100
-#define BOUND_OF_LOOP 10
-#define UINT64_MAX (18446744073709551615ULL)
+#define ITERS 1000
 #define MAX 64
 #define PORT 8080
 #define SA struct sockaddr
    
 // Function designed for chat between client and server.
-void func(int connfd)
+void loop_back(int connfd)
 {
     char buff_recv[MAX];
     // read the message from client and copy it in buffer
@@ -36,16 +34,16 @@ int main()
 {
     int sockfd, connfd;
     socklen_t len;
-    struct sockaddr_in servaddr, cli;
+    struct sockaddr_in servaddr, client;
    
-    // socket create and verification
+    // Create Socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         exit(0);
     }
     bzero(&servaddr, sizeof(servaddr));
    
-    // assign IP, PORT
+    // Assign Server
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(PORT);
@@ -65,13 +63,12 @@ int main()
     }
     else
         printf("Server listening..\n");
-    len = sizeof(cli);
+        len = sizeof(client);
    
     for(;;){
-        // Accept the data packet from client and verification
-        connfd = accept(sockfd, (SA*)&cli, &len);
+        connfd = accept(sockfd, (SA*)&client, &len);
         //Recv and send
-        func(connfd);
+        loop_back(connfd);
     }
 
     if (connfd < 0) {

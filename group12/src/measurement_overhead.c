@@ -23,6 +23,19 @@ int main()
 	
 	//ensure that this process gets the highest priority
 	setpriority(PRIO_PROCESS, getpid(), -20);
+	
+	asm volatile("cpuid\n\t"
+                "rdtsc\n\t"
+                "mov %%edx, %0\n\t"
+                "mov %%eax, %1\n\t"
+                : "=r" (cycles_high), "=r" (cycles_low)
+                :: "%rax", "%rbx", "%rcx", "%rdx"); 
+			
+	asm   volatile("RDTSCP\n\t"          
+			"mov %%edx, %0\n\t"          
+			"mov %%eax, %1\n\t"          
+			"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: 
+			"%rax", "%rbx", "%rcx", "%rdx"); 
 
 	for   (int i = 0; i < ITERS ; i++) 
 	{        

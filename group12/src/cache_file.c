@@ -1,38 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/fcntl.h>
 #include <stdint.h>
 #include <benchmark.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 
-#define KB 1024
+#define KB 1024L                     //L is defined to support uint64
 #define MB (1024 * KB)
 #define GB (1024 * MB)
-#define BLOCK (4 * KB)
+#define BLOCK_SIZE (4 * KB)
 
-#define TIME_PER_CYCLE 1/(1.7 * 1000000000)
+#define CYCLE_TIME 1/(1.7 * 1000)
 
-#define NUM_FILES 22
-
-#define FLUSH_AND_PURGE ({ \
-    char* data = "3"; \
-    int fd = open("/proc/sys/vm/drop_caches", O_WRONLY); \
+#define FLUSH_CACHE ({ \
+    char* data = "F"; \
+    int fd = open("sudo /proc/sys/vm/drop_caches", O_WRONLY); \
     write(fd, data, sizeof(char)); \
     close(fd); \
     })
 
-double reader(int fd, char* buffer, uint64_t file_size) {
+double read_file(int fd, char* buffer, uint64_t file_size) {
     uint64_t bytes_read = 0;
 
     start_benchmark();
-    while((bytes_read += read(fd, buffer, BLOCK)) < file_size);
+    while((bytes_read += read(fd, buffer, BLOCK_SIZE)) < file_size);
     end_benchmark();
 
-    double read_time = report_cycles(1) * TIME_PER_CYCLE;
+    double read_time = report_cycles(1) * CYCLE_TIME;
     return read_time;
 }
 
 int main(int argc, char const *argv[]) {
+    
+    int fd;
+    char *buffer = (char *) malloc(BLOCK_SIZE);
+    
     const char * files[] = {
         "../data/4K.dat",
         "../data/8K.dat",
@@ -59,7 +61,7 @@ int main(int argc, char const *argv[]) {
     };
 
     uint64_t file_sizes[] = {
-	    4*KB,
+	4*KB,
         8*KB,
         16*KB,
         32*KB,
@@ -80,29 +82,24 @@ int main(int argc, char const *argv[]) {
         1*GB,
         2*GB,
         4*GB,
-        8*GB
+        8*GB,
     };
 
-    int fd;
-    char *buffer = (char *) malloc(BLOCK);
 
-    printf("%s, %s, %s\n", "File Size (in MB)", "Time(in s)", "Bandwidth (in MB/s)");
-    for(int i = 0; i < NUM_FILES; i++) {
-        FLUSH_AND_PURGE;
+    for(int i = 0; i < 22; i++) {
+        FLUSH_CACHE;
 
         fd = open(files[i], O_RDONLY);
-        // disable read ahead
-        //fcntl(fd, F_RDAHEAD, 0);
 
-        // first read, potentially loading into file cache
+        // Load in cache
         lseek(fd, 0, SEEK_SET);
-        double time_taken = reader(fd, buffer, file_sizes[i]);
+        double time_taken = read_file(fd, buffer, file_sizes[i]);
 
-        // second read. if file size is smaller than file cache, read time will be low, else high
+        //second time read, if present time will be low.
         lseek(fd, 0, SEEK_SET);
-        time_taken = reader(fd, buffer, file_sizes[i]);
+        time_taken = read_file(fd, buffer, file_sizes[i]);
 
-        printf("%.2lf, %.2lf, %.2lf\n", ((double)file_sizes[i]/MB), time_taken, ((double)file_sizes[i]/MB)/time_taken);
+        printf("Time Taken in mili-Second read is  %lf\n",  time_taken);
     }
     close(fd);
     free(buffer);

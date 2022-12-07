@@ -2,17 +2,16 @@
 	#define _GNU_SOURCE 
 #endif
 #include<stdio.h>
-#include<sched.h>
 #include<stdlib.h>
+#include<sched.h>
 #include<unistd.h>
 #include<sys/time.h>
 #include<sys/resource.h>
 #include<benchmark.h>
 
-#define SIZE_OF_STAT 10000 
-#define BOUND_OF_LOOP 1000
-#define UINT64_MAX (18446744073709551615ULL)
+#define ITERS 1000
 #define LOOP_ITERS 1000
+
 
 int main()
 {
@@ -41,7 +40,7 @@ int main()
 			"%rax", "%rbx", "%rcx", "%rdx"); 
 			
 
-	for   (int i = 0; i < BOUND_OF_LOOP * SIZE_OF_STAT ; i++) 
+	for   (int i = 0; i < ITERS ; i++) 
 	{        
 		start_benchmark();	
 		//** Code to be Benchmarked
