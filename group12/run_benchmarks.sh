@@ -9,12 +9,13 @@
 #./bin/context_switch process >> part1_results/process_context_switch.txt
 
 ####Part2
+##To get the memory latency plot, run python3 plot_mem_latency.py.
 #./bin/memory_latency -n 32 -s 128 -i 100 > part2_results/memory_latency.txt  ## n means array size, s means stride and i means number of iterations.
 #./bin/mem_bandwidth > part2_results/mem_bandwidth.txt  
 #./bin/page_fault_service > part2_results/page_fault_service.txt 
 
 #####Part3
-#./bin/rtt_client.c >> part3_results/rtt_client.txt  ##Make sure you run ./bin/rtt_server before client and  edit the server Ip address to the server you are testing.
+#./bin/rtt_client >> part3_results/rtt_client.txt  ##Make sure you run ./bin/rtt_server before client and  edit the server Ip address to the server you are testing.
 #./bin/network_peak_bandwidth c >> part3_results/network_peak_bandwidth.txt ##Make sure you run ./bin/network_peak_bandwidth s in server before client, edit the server Ip address to the server you are testing.
 #./bin/conn_setup_client >> part3_results/conn_setup_client.txt ##Make sure you run ./bin/conn_setup_teardown_server before client and in edit the server Ip address to the server you are testing. 
 #./bin/conn_teardown_client >> part3_results/conn_teardown_client.txt ##Make sure you run ./bin/conn_setup_teardown_server before client and in edit the server Ip address to the server you are testing. 
