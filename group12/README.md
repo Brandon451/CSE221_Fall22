@@ -1,3 +1,4 @@
 Run ``make`` to generate binaries. Binaries for each benchmark are generated in the /bin folder.
-Measurements are done after setting freq to constant 1.7Ghz with no dynamic freq scaling. For this we are running with intel acpi-cpufreq driver on i7-1165g7
-Benchmarks set cpu affinity to a single core to remove core-migration and set priority to -20 (highest priority linux process)
+Then you can run each measurement with the executable file present is bin folder.
+There is a script run_benchmark.sh which includes the run command for each measurement.
+There are comments in run_benchmark which gives info about how to run.
